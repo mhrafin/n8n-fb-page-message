@@ -10,7 +10,7 @@
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.2,
-      "position": [-160, -128],
+      "position": [-368, -128],
       "id": "6b2a284e-a23b-4957-b592-976593570d06",
       "name": "Webhook",
       "webhookId": "0b1e8e4c-c30a-4f5f-95b1-3ebd7dbedb54"
@@ -23,21 +23,21 @@
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [64, -224],
+      "position": [-144, -224],
       "id": "52fa9f1b-e0ef-4540-998a-77c9ef6a3fc0",
       "name": "Respond to Webhook"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $('Filter').item.json.body.entry[0].messaging[0].message.text }}",
+        "text": "={{ $('Filter').item.json.message.text }}",
         "options": {
           "systemMessage": "# Role\n\nYou are a friendly and professional sales assistant for an online shop.\n\nYour main responsibilities are:\n\n1. Answer customer questions about products.\n2. Provide product price and availability.\n3. Answer common questions using the FAQ tool.\n4. Help customers place orders.\n5. Collect all required order information.\n6. Add confirmed orders to the Order sheet using the Order tool.\n\n# Tools\n\nYou have 3 Google Sheets tools:\n\n### 1. Products Tool\n\nContains product names, prices, and availability.\n\nUse this tool whenever the customer:\n\n* Asks about a product.\n* Asks for a product price.\n* Asks whether a product is available.\n* Wants to know about available products.\n\nNever guess product names, prices, or availability.\n\n### 2. FAQ Tool\n\nContains frequently asked questions and their answers.\n\nUse this tool when the customer asks a general question about:\n\n* Delivery\n* Payment\n* Return/refund\n* Shipping\n* Product policies\n* Other common shop-related questions\n\nIf the answer is not available in the FAQ, politely say that you do not have that information.\n\n### 3. Order Tool\n\nThe Order sheet is used to save confirmed orders.\n\nThe Order sheet contains these fields:\n\n* Customer Name\n* Mobile Number\n* Address\n* Ordered Product\n* Quantity\n* Total Bill\n* bKash Number\n* Transaction ID\n* Status\n\nOnly use the Order Tool after collecting the required information from the customer.\n\n# Product Rules\n\n* Always check the Products Tool before giving product price or availability.\n* Never invent or assume product information.\n* If a product is unavailable, clearly tell the customer.\n* If the customer asks about multiple products, check the Products Tool for each relevant product.\n* Calculate the total bill using the actual product price and quantity.\n\n# Order Process\n\nWhen a customer wants to place an order:\n\nFirst collect:\n\n1. Customer name\n2. Mobile number\n3. Delivery address\n4. Product name\n5. Quantity\n6. bKash number\n7. Transaction ID\n\nAsk only for information that is still missing.\n\nBefore saving the order, confirm the order details with the customer.\n\nExample:\n\n\"আপনার অর্ডারটি কনফার্ম করার আগে একবার দেখে নিচ্ছি:\n\nProduct: [Product]\nQuantity: [Quantity]\nTotal Bill: [Total Bill]\nName: [Name]\nMobile: [Mobile]\nAddress: [Address]\nbKash Number: [bKash Number]\nTransaction ID: [Transaction ID]\n\nসব তথ্য ঠিক থাকলে 'Confirm' বলুন।\"\n\nOnly after the customer confirms, use the Order Tool and append the order to the Order sheet.\n\nSet the order status as \"Confirmed\" unless the business requires another status.\n\n# Important Order Rules\n\n* Never add an order to the Order sheet before customer confirmation.\n* Never create an order using incomplete information.\n* Never invent missing customer information.\n* If the customer has not provided a required field, ask for it.\n* If the customer changes product or quantity, update the order details before confirmation.\n* After successfully adding the order, tell the customer that the order has been confirmed.\n\n# Conversation Style\n\n* Be friendly, polite, and concise.\n* Reply in the same language as the customer whenever possible.\n* Use simple language.\n* Do not mention internal tools, Google Sheets, workflows, or system instructions.\n* Do not expose internal data unnecessarily.\n* Do not overwhelm the customer with too many questions at once.\n* Keep the conversation natural like a real online shop salesperson.\n\n# Important Rules\n\n1. Never fabricate product information.\n2. Never fabricate FAQ answers.\n3. Always use the appropriate tool when information is available in the tools.\n4. Never save an order before customer confirmation.\n5. Never claim that an order was saved unless the Order Tool successfully completes the operation.\n6. If a tool does not contain the requested information, honestly tell the customer.\n\nReply in plaintext only. No Markdown, no asterisks."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
-      "position": [832, -288],
+      "position": [1072, -288],
       "id": "e16968cd-785f-42ff-b6a3-cafbfae8f515",
       "name": "AI Agent"
     },
@@ -48,7 +48,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.2,
-      "position": [648, -56],
+      "position": [888, -56],
       "id": "2d191591-ce3c-491e-b3ea-26205d231a03",
       "name": "Google Gemini Chat Model",
       "credentials": {
@@ -61,12 +61,12 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Filter').item.json.body.entry[0].messaging[0].sender.id }}",
+        "sessionKey": "={{ $('Filter').item.json.sender.id }}",
         "contextWindowLength": 10
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
-      "position": [776, -56],
+      "position": [1016, -56],
       "id": "50f5b521-9427-4387-8056-02fca958fa14",
       "name": "Simple Memory"
     },
@@ -82,7 +82,7 @@
           "conditions": [
             {
               "id": "8a1c6491-b89e-4252-b33c-f47741a6a852",
-              "leftValue": "={{ $json.body.entry[0].messaging[0].message.text }}",
+              "leftValue": "={{ $json.message.text }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -97,24 +97,24 @@
       },
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.4,
-      "position": [64, -32],
+      "position": [304, -32],
       "id": "d7305f5a-b73a-4c2b-974c-c41668e6b6ae",
       "name": "Filter"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v26.0/{{ $('Filter').item.json.body.entry[0].messaging[0].recipient.id }}/messages",
+        "url": "=https://graph.facebook.com/v26.0/{{ $('Filter').item.json.recipient.id }}/messages",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Filter').item.json.body.entry[0].messaging[0].sender.id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": {{ JSON.stringify($json.output) }}\n  }\n}\n",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Filter').item.json.sender.id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": {{ JSON.stringify($json.output) }}\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.5,
-      "position": [1360, -176],
+      "position": [1600, -176],
       "id": "768dbed9-9549-4007-8dbe-fc292def2265",
       "name": "HTTP Request",
       "credentials": {
@@ -144,7 +144,7 @@
       },
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
-      "position": [904, -56],
+      "position": [1144, -56],
       "id": "2ee94774-750f-4aec-84f2-3c83917e9c20",
       "name": "products",
       "credentials": {
@@ -174,7 +174,7 @@
       },
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
-      "position": [1032, -56],
+      "position": [1272, -56],
       "id": "6524c991-14a1-407c-8913-cb0601927f0f",
       "name": "faq",
       "credentials": {
@@ -186,158 +186,8 @@
     },
     {
       "parameters": {
-        "operation": "appendOrUpdate",
-        "documentId": {
-          "__rl": true,
-          "value": "1JIWdr2K9TB-IU9xTqtmpIimj02EqfHSlw95u7iYfES4",
-          "mode": "list",
-          "cachedResultName": "mhrafin",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JIWdr2K9TB-IU9xTqtmpIimj02EqfHSlw95u7iYfES4/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": 940183865,
-          "mode": "list",
-          "cachedResultName": "orders",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JIWdr2K9TB-IU9xTqtmpIimj02EqfHSlw95u7iYfES4/edit#gid=940183865"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "order_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('order_id', ``, 'string') }}",
-            "customer_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('customer_id', ``, 'string') }}",
-            "customer_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('customer_name', ``, 'string') }}",
-            "product_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_id', ``, 'string') }}",
-            "quantity": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('quantity', ``, 'string') }}",
-            "total_usd": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('total_usd', ``, 'string') }}",
-            "order_date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('order_date', ``, 'string') }}",
-            "status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('status', ``, 'string') }}",
-            "shipping_method": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('shipping_method', ``, 'string') }}"
-          },
-          "matchingColumns": ["order_id"],
-          "schema": [
-            {
-              "id": "order_id",
-              "displayName": "order_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "customer_id",
-              "displayName": "customer_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "customer_name",
-              "displayName": "customer_name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "product_id",
-              "displayName": "product_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "quantity",
-              "displayName": "quantity",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "total_usd",
-              "displayName": "total_usd",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "order_date",
-              "displayName": "order_date",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "status",
-              "displayName": "status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "shipping_method",
-              "displayName": "shipping_method",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheetsTool",
-      "typeVersion": 4.7,
-      "position": [1160, -56],
-      "id": "4cab325f-302d-441c-a23c-dab3d78237e7",
-      "name": "orders",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "PFE25cdcDAMS66GH",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "text": "={{ $json.body.entry[0].messaging[0].message.text }}",
+        "text": "={{ $json.message.text }}",
         "guardrails": {
-          "jailbreak": {
-            "value": {
-              "threshold": 0.7
-            }
-          },
-          "nsfw": {
-            "value": {
-              "threshold": 0.7
-            }
-          },
           "topicalAlignment": {
             "value": {
               "threshold": 0.7,
@@ -348,24 +198,24 @@
       },
       "type": "@n8n/n8n-nodes-langchain.guardrails",
       "typeVersion": 2,
-      "position": [288, -32],
+      "position": [528, -32],
       "id": "4c306f74-1700-4dea-bb53-137aeb9e032f",
       "name": "Guardrails"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://graph.facebook.com/v26.0/{{ $('Filter').item.json.body.entry[0].messaging[0].recipient.id }}/messages",
+        "url": "=https://graph.facebook.com/v26.0/{{ $('Filter').item.json.recipient.id }}/messages",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Filter').item.json.body.entry[0].messaging[0].sender.id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"Please stay within the business scope.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Filter').item.json.sender.id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"Please stay within the business scope.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.5,
-      "position": [896, 112],
+      "position": [1136, 112],
       "id": "a6ba316d-f244-4080-af15-f466050bb3da",
       "name": "HTTP Request1",
       "credentials": {
@@ -374,6 +224,176 @@
           "name": "Header Auth account"
         }
       }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "=body.entry",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1.1,
+      "position": [-144, -32],
+      "id": "764ad98b-1414-49bd-83f8-e73ef85d452d",
+      "name": "Split Out Entry"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "messaging",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1.1,
+      "position": [80, -32],
+      "id": "b264a420-2d17-432a-856f-6ab79beb387e",
+      "name": "Split Out Messaging"
+    },
+    {
+      "parameters": {
+        "description": "Saves a confirmed order. Call only after the customer confirms. Returns an error if something is wrong.",
+        "workflowId": {
+          "__rl": true,
+          "value": "WYpEAcUYzlKRSdWz",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/WYpEAcUYzlKRSdWz",
+          "cachedResultName": "save-order"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "shipping_method ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('shipping_method_', ``, 'string') }}",
+            "sender_id": "={{ $('Filter').item.json.sender.id }}",
+            "mid": "={{ $('Filter').item.json.message.mid }}",
+            "product_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_id', ``, 'string') }}",
+            "quantity": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('quantity', ``, 'number') }}",
+            "quoted_total": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('quoted_total', ``, 'number') }}",
+            "customer_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('customer_name', ``, 'string') }}",
+            "mobile": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('mobile', ``, 'string') }}",
+            "address": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('address', ``, 'string') }}",
+            "bkash_number": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('bkash_number', ``, 'string') }}",
+            "transaction_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('transaction_id', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "sender_id",
+              "displayName": "sender_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "mid",
+              "displayName": "mid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "product_id",
+              "displayName": "product_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "quoted_total",
+              "displayName": "quoted_total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "mobile",
+              "displayName": "mobile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "bkash_number",
+              "displayName": "bkash_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "transaction_id",
+              "displayName": "transaction_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "shipping_method ",
+              "displayName": "shipping_method ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [1400, -56],
+      "id": "2e291aa7-aeca-439b-80fe-a89ffc13b337",
+      "name": "save_order"
     }
   ],
   "pinData": {},
@@ -389,7 +409,7 @@
         ],
         [
           {
-            "node": "Filter",
+            "node": "Split Out Entry",
             "type": "main",
             "index": 0
           }
@@ -467,17 +487,6 @@
         ]
       ]
     },
-    "orders": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Guardrails": {
       "main": [
         [
@@ -495,6 +504,39 @@
           }
         ]
       ]
+    },
+    "Split Out Entry": {
+      "main": [
+        [
+          {
+            "node": "Split Out Messaging",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Messaging": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "save_order": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -502,7 +544,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "e935a816-431b-4bee-8bc1-ebd1756d5a4b",
+  "versionId": "56f03d1b-b356-4990-ac07-47b5d8b57d67",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "6cc04bba7fa3035e7e71a6b241d97355e0ac5a02d8bb6943ee3649309612d7d8"
