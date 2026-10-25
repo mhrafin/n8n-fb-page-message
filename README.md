@@ -37,28 +37,28 @@ An intelligent Facebook Messenger automated sales and customer support assistant
 
 Clone the repository and configure your environment variables:
 
-\`\`\`bash
+```bash
 git clone https://github.com/mhrafin/msg-automation.git
 cd msg-automation
 
 # Copy the example environment file
 cp .env.example .env
-\`\`\`
+```
 
 Edit `.env` to configure your passwords, tokens, and domain settings:
 
-\`\`\`bash
+```bash
 # Generate necessary secrets and configure your domains
 nano .env
-\`\`\`
+```
 
 ### 2. Running with Docker Compose
 
 Start the n8n stack in the background:
 
-\`\`\`bash
+```bash
 docker compose up -d
-\`\`\`
+```
 
 Access the n8n editor at `http://localhost:5678` (or your configured domain).
 
